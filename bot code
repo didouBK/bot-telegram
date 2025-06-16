@@ -1,0 +1,27 @@
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+import requests
+import os
+
+API_TOKEN = os.environ.get('TELEGRAM_TOKEN')
+
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("Bienvenue sur KabyLingo Bot ! Envoie un mot en français et je te répondrai.")
+
+def handle_message(update: Update, context: CallbackContext):
+    mot = update.message.text
+    traduction = mot[::-1]  # Remplace par ta vraie API plus tard
+    update.message.reply_text(f"Traduction kabyle de '{mot}': {traduction}")
+
+def main():
+    updater = Updater(API_TOKEN)
+    dispatcher = updater.dispatcher
+
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
